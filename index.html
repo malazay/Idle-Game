@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Game</title>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+</head>
+
+<body>
+    <!-- Navbar goes here -->
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo right">Kingdom Simulator</a>
+            <ul id="nav-mobile" class="left hide-on-med-and-down">
+                <li>
+                    <a href="sass.html">Overview</a>
+                </li>
+                <li>
+                    <a href="badges.html">Warfare</a>
+                </li>
+                <li>
+                    <a href="collapsible.html">Research</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Layout here -->
+    <div class="row">
+        <div class="col s12 m4 l3 grey lighten-2 valign-wrapper">
+            <div>
+                <h3>Stats</h3>
+                <ul id="game-stats" class="collection"></ul>
+            </div>
+        </div>
+        <div class="col s12 m8 l9 teal lighten-5">
+            <div>
+                    <h3>Timer</h3>
+                    <div id="timer" class="subtitle">Day 1 of Summer, Year 0</div>
+                <div class="col s6">
+                        <h3>Clickers</h3>
+                        <ul id="game-clickers" class="collection"></ul>
+                        <h3>Buy Population</h3>
+                        <ul id="game-population" class="collection"></ul>
+                        <h3>Buy Buildings</h3>
+                        <ul id="game-buildings" class="collection"></ul>
+                </div>
+                <div class="col s6">
+                    <h3>Upgrades</h3>
+                    <ul id="game-upgrades" class="collection">
+                        <li class="collection-item"><button class="waves-effect waves-light btn-large">Investigate stone weapons</button><div class="left-align">Hunthers hunt more food (x3)</div></li>
+                        <li class="collection-item"><button class="waves-effect waves-light btn-large">Contact the spirits</button><div class="left-align">Healers discover new medicines (x2)</div></li>
+                        <li class="collection-item"><button class="waves-effect waves-light btn-large">Find the Mutombo</button><div class="left-align">Shits got bigger (??)</div></li>
+                    </ul>
+                </div>
+                
+               
+            </div>
+        </div>
+    </div>
+    <!-- SCRIPTS -->
+    <script src="scripts/timer.js"></script>
+    <script src="scripts/assets.js"></script>
+    <script src="scripts/stats.js"></script>
+    <script src="scripts/game.js"></script>
+    <script src="scripts/draw.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+</body>
+
+</html>
