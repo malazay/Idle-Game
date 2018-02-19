@@ -1,40 +1,54 @@
 Vue.component('friend-component', {
     props: ['friend'],
     filters: {
-      fullName(value){
-          return `${value.last}, ${value.first}`;
-      }  
+      ageInOneYear(age) {
+        return age + 1;
+      },
+      fullName(value) {
+        return `${value.last}, ${value.first}`;
+      }
     },
     methods: {
-        incrementStat(stat) {
-            this.stats[stat]++;
-        }
+      decrementAge(friend) {
+        friend.age = friend.age - 1;
+      },
+      incrementAge(friend) {
+        friend.age = friend.age + 1;
+      },
     },
-    templates: 
-    `<div>
-        <h4>{{friend.name}}</h4>
-    </div>`
-    // <h3 v-for="(value, key) in stats">{{ key }}: {{ value }}</h3>
-});
-
-const app = new Vue({
+    template: `
+      <div>
+        <h4>{{friend | fullName}}</h4>
+        <h5>age: {{friend.age}}</h5>
+        <button v-on:click="decrementAge(friend)">-</button>
+        <button v-on:click="incrementAge(friend)">+</button>
+        <input v-model="friend.first"/>
+        <input v-model="friend.last"/>
+      </div>
+    `
+  });
+  
+  
+  
+  const app = new Vue({
     el: "#app",
     data: {
-        friends: [
-            {
-                first: "Teto",
-                last: "Medina",
-                age: 100
-            },
-            {
-                first: "Tito",
-                last: "Puentes",
-                age: 210
-            }
-        ]
+      friends: [
+        {
+          first: "Bobby",
+          last: "Boone",
+          age: 25
+        },
+        {
+          first: "John",
+          last: "Boone",
+          age: 35,
+        }
+      ],
     },
-    templates: 
-    `<div>
-        <friend-component v-for="item in friends" v-bind:friend="item"/>
-    </div>`
-})
+    template: `
+      <div>
+        <friend-component v-for="item in friends" v-bind:friend="item" />
+      </div>
+    `
+  })
