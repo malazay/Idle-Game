@@ -1,9 +1,11 @@
 var populationUnits = [];
+var buildingUnits = [];
 var clickers = [];
 
 function startGame(){
     createUnits();
     createClickers();
+    createBuildings();
 }
 
 function createClickers(){
@@ -20,6 +22,15 @@ function createUnits(){
     populationUnits.push(gatherer);
     populationUnits.push(hunther);
     populationUnits.push(healer);
+}
+
+function createBuildings(){
+    var farm = new Building('Farm', 0, 2,[{type: 'food', value: 100}, {type: 'wood', value: 200}], [{type: 'food', value: 3}], [], "Produces food");
+    var lumber = new Building('Lumber Station', 0, 2, [{type: 'wood', value: 300}], [{type: 'wood', value: 3}], [], "Produces wood");
+    var mine = new Building('Mine', 0, 5, [{type: 'food', value: 500}, {type: 'wood', value: 1000}], [{type: 'ore', value: 1}], [], "Produces ore");
+    buildingUnits.push(farm);
+    buildingUnits.push(lumber);
+    buildingUnits.push(mine);
 }
 
 function calculatePopulation(){

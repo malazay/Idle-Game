@@ -11,6 +11,7 @@ function drawAtStart(){
     drawStats();
     drawClickers();
     drawPopulationButtons();
+    drawBuildingButtons();
 }
 
 function drawTimer(){
@@ -24,7 +25,7 @@ function drawStats(){
     var gameStatsElement = document.getElementById("game-stats");
     var statsContent = "";
     for (key in gameStats) {
-        statsContent += `<li>${key}: ${gameStats[key]}</li>`
+        statsContent += `<li>${key}: ${gameStats[key].toFixed(2)}</li>`
     }
     gameStatsElement.innerHTML = statsContent;
 }
@@ -66,6 +67,23 @@ function drawPopulationCostUpdates(){
         if (populationCost){
             populationCost.innerText = `Buy 1 for ${populationUnits[i].getCostToBuy()} food`
         }
+    }
+}
+
+function drawBuildingButtons(){
+    console.log('Draw buildings')
+    var buildingBuyersList = document.getElementById("game-buildings");
+    for (let i=0; i < buildingUnits.length; i++){
+        var item = document.createElement('li');
+        item.classList.add("collection-item");
+        item.innerHTML = `
+        <button class="waves-effect waves-light btn-large">
+            <i class="material-icons left">add</i> ${buildingUnits[i].title}
+        </button> - <span id="${buildingUnits[i].title}-cost">Buy 1 for 1 food</span>`;
+        // item.onclick = function(){
+        //     populationUnits[i].add();
+        // }
+        buildingBuyersList.appendChild(item);
     }
 }
 

@@ -4,7 +4,8 @@
     wood : 0,
     iron : 0,
     skins : 0,
-    plants : 0
+    plants : 0,
+    ore: 0
 }
 
 evolveStats = {
