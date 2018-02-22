@@ -1,3 +1,17 @@
 body {
-    background-color: #57A773;
+    /* background-color: #57A773; */
+}
+
+/* .card {
+    
+  } */
+
+  .box {
+    height: 170px;
+    flex-direction: column;
+}
+
+.button {
+    width: 128px;
+    height: 90px;
 }

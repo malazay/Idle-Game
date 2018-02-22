@@ -5,76 +5,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Game</title>
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
 </head>
 
 <body>
-    <!-- Navbar goes here -->
-    <nav>
-        <div class="nav-wrapper">
-            <a href="#" class="brand-logo right">Kingdom Simulator</a>
-            <ul id="nav-mobile" class="left hide-on-med-and-down">
-                <li>
-                    <a href="sass.html">Overview</a>
-                </li>
-                <li>
-                    <a href="badges.html">Warfare</a>
-                </li>
-                <li>
-                    <a href="collapsible.html">Research</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Page Layout here -->
-    <div class="row">
-        <div class="col s12 m4 l3 grey lighten-2 valign-wrapper">
-            <div>
-                <h3>Stats</h3>
-                <ul id="game-stats" class="collection"></ul>
-                <h3>Upgrades</h3>
-                    <ul id="game-upgrades" class="collection">
-                        <li class="collection-item"><button class="waves-effect waves-light btn-large">Investigate stone weapons</button><div class="left-align">Hunthers hunt more food (x3)</div></li>
-                        <li class="collection-item"><button class="waves-effect waves-light btn-large">Contact the spirits</button><div class="left-align">Healers discover new medicines (x2)</div></li>
-                        <li class="collection-item"><button class="waves-effect waves-light btn-large">Find the Mutombo</button><div class="left-align">Shits got bigger (??)</div></li>
-                    </ul>
+    <div id="app">
+        <div>
+            <nav class="navbar is-primary">
+                <div>
+                    <p class="heading">Day {{timer.day}} of {{timer.season | seasonName}}, Year {{timer.year}}</p>
+                    <p class="title">Kingdom Simulator</p>
+                </div>
+            </nav>
+            <div class="level">
+                <div v-for="(value, resource) in stats" class="level-item has-text-centered">
+                    <div>
+                        <p class="heading">{{resource}}</p>
+                        <p class="title">{{value}}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Resource clickers -->
+            <section class="section">
+                <h1 class="subtitle">Resources</h1>
+                <!-- Left side -->
+                <div class="level-left">
+                    <div v-for="(value, resource) in stats" class="level-item level-left" v-show="clickerAvailable.indexOf(resource) >= 0">
+                        <div>
+                            <button class="button is-rounded is-primary" v-on:click="addResource(resource)">Add {{resource}}</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Unit Section -->
+            <section class="section">
+                <h1 class="subtitle">Units</h1>
+                <!-- Left side -->
+                <div class="level-left">
+                    <div v-for="unit in units" v-show="unit.isAvailable" class="level-item">
+                        <div>
+                            <button v-on:click="addUnit(unit)" class="button is-rounded is-primary" v-bind:disabled="!unit.canBuy">Add {{unit.name}}</button>
+                            <div class="level-item">
+                                <p class="heading">{{unit.costList | stringifyMaterials}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="level-right">
+                    <div v-for="unit in units" v-show="unit.isAvailable" class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">{{unit.getPlural()}}</p>
+                            <p class="title">{{unit.quantity}}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- BOX -->
+            <p class="subtitle">Upgrades</p>
+            <div class="columns">
+                <div v-for="upgrade in upgrades" class="box column is-3">
+                    <article class="media is-light">
+                        <div class="media-left">
+                            <figure class="image is-64x64">
+                                <img :src="'images/icons/' + upgrade.icon" alt="Image">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <div class="content">
+                                <p>
+                                    <strong>Upgrade</strong>
+                                    <small>{{upgrade.costList | stringifyMaterials}}</small>
+                                    <br>
+                                    <button class="button is-rounded is-primary">Buy</button>
+                                    <br> {{upgrade.description}}
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
             </div>
         </div>
-        <div class="col s12 m8 l9 teal lighten-5">
-            <div>
-                    <h3>Timer</h3>
-                    <div id="timer" class="subtitle">Day 1 of Summer, Year 0</div>
-                <div class="col s6">
-                        <h3>Clickers</h3>
-                        <ul id="game-clickers" class="collection"></ul>
-                        <h3>Buy Population</h3>
-                        <ul id="game-population" class="collection"></ul>
-                        
-                </div>
-                <div class="col s6">
-                        <h3>Buy Buildings</h3>
-                        <ul id="game-buildings" class="collection"></ul>
-                </div>
-                
-               
-            </div>
-        </div>
-    </div>
-    <!-- SCRIPTS -->
-    <script src="scripts/timer.js"></script>
-    <script src="scripts/assets.js"></script>
-    <script src="scripts/stats.js"></script>
-    <script src="scripts/game.js"></script>
-    <script src="scripts/draw.js"></script>
-    <!-- Compiled and minified JavaScript -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+        <!-- SCRIPTS -->
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+        <script src="scripts/assets.js"></script>
+        <script src="scripts/main.js"></script>
 </body>
 
 </html>
