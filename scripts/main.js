@@ -65,7 +65,7 @@ const app = new Vue({
             }], [{
                 type: 'food',
                 amount: 2
-            }], 'Build stone tools for Gatherers', 'stone-axe.svg', 'Stone axes are way better than hands!'),
+            }], 'Build stone tools for Gatherers', 'stone-axe.svg', 'Stone axes are way better than hands!', true),
             new Upgrade([{
                 type: 'unit',
                 name: 'hunther'
@@ -75,7 +75,7 @@ const app = new Vue({
             }], [{
                 type: 'food',
                 amount: 2
-            }], 'Discover spears for Hunthers', 'caveman.svg', 'No animal is too much now! more food!'),
+            }], 'Discover spears for Hunthers', 'caveman.svg', 'No animal is too much now! more food!', true),
             new Upgrade([{
                 type: 'unit',
                 name: 'gatherer'
@@ -94,7 +94,7 @@ const app = new Vue({
             }, {
                 type: 'wood',
                 amount: 2
-            }], 'Domesticate animals', 'bison.svg', "With help of beasts Hunthers and Gatherers produce more food and wood")
+            }], 'Domesticate animals', 'bison.svg', "With help of beasts Hunthers and Gatherers produce more food and wood", true)
         ],
         canBuyList: [],
         clickerAvailable: ['food', 'wood', 'stone']
@@ -163,6 +163,16 @@ const app = new Vue({
                     unit.canBuy = true;
                 } else{
                     unit.canBuy = false;
+                }
+            }
+            for (var i = 0; i < this.upgrades.length; i++) {
+                console.log(`Verifying upgrade ${this.upgrades[i].title}`)
+                var upgrade = this.upgrades[i];
+                if (upgrade.isAvailable && this.canBuy(upgrade)) {
+                    this.canBuyList.push(upgrade.title);
+                    upgrade.canBuy = true;
+                } else{
+                    upgrade.canBuy = false;
                 }
             }
         },

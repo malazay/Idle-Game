@@ -76,10 +76,10 @@
                         <div class="media-content">
                             <div class="content">
                                 <p>
-                                    <strong>Upgrade</strong>
+                                    <strong>{{upgrade.title}}</strong>
                                     <small>{{upgrade.costList | stringifyMaterials}}</small>
                                     <br>
-                                    <button class="button is-rounded is-primary">Buy</button>
+                                    <button class="button is-rounded is-primary" v-bind:disabled="!upgrade.canBuy">Buy</button>
                                     <br> {{upgrade.description}}
                                 </p>
                             </div>

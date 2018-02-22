@@ -50,12 +50,14 @@ class Cost {
 }
 
 class Upgrade {
-    constructor(type, costList, bonus, title, icon, description) {
+    constructor(type, costList, bonus, title, icon, description, isAvailable) {
         this.type = type;
         this.costList = costList;
         this.bonus = bonus;
         this.title = title;
         this.icon = icon;
         this.description = description;
+        this.canBuy = false;
+        this.isAvailable = isAvailable;
     }
 }
