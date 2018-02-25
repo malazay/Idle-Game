@@ -10,7 +10,6 @@ class Unit {
         this.canBuy = false;
         this.icon = icon;
     }
-
     add() {
         this.quantity++;
     }
@@ -19,18 +18,29 @@ class Unit {
             this.costList[i].amount = Math.round(Math.pow(this.costList[i].amount + this.quantity, this.costList[i].buyModifier));
         }
     }
-    upgrade(resource) {
-        // This will upgrade the resource in resource list
-        // new Upgrade([{type: 'unit', name: 'gatherer'}], [{type: 'wood', amount: 100}], [{type: 'food', amount: 2}], 'Build wooden tools for Gatherers')
-        for (var i = 0; i < this.resourcesList.length; i++) {
-            if (this.resourcesList[i].type == resource.type) {
-                this.resourcesList[i].amount *= resource.amount;
+    upgradeResource(name, amount){
+        for (var i = 0; i < this.resourcesList.length; i++){
+            if (name === this.resourcesList[i].type){
+                this.resourcesList[i].amount *= amount;
+                return;
             }
         }
+        console.log(`Resource ${name} not found`);
     }
 
     getPlural(){
         return this.name + "s";
+    }
+}
+
+class Building extends Unit {
+    constructor(name, quantity, resourcesList, costList, upgradesList, isAvailable, icon, unitTrainList){
+        super(name, quantity, resourcesList, costList, upgradesList, isAvailable, icon);
+        this.unitTrainList = unitTrainList;
+    }
+
+    sayShit(){
+        console.log("Say shit bitch")
     }
 }
 
@@ -50,10 +60,10 @@ class Cost {
 }
 
 class Upgrade {
-    constructor(type, costList, bonus, title, icon, description, isAvailable) {
-        this.type = type;
+    constructor(typeList, costList, bonusList, title, icon, description, isAvailable) {
+        this.typeList = typeList;
         this.costList = costList;
-        this.bonus = bonus;
+        this.bonusList = bonusList;
         this.title = title;
         this.icon = icon;
         this.description = description;

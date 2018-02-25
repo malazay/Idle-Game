@@ -22,3 +22,4 @@ For now just open the 'index.html' file on any browser (only tested on **Chrome*
 - Add Quests for heroes
 - Add Conquering mechanics
 - Add Evolution mechanics
+- Mobile support (?)

@@ -25,6 +25,7 @@
                     <div>
                         <p class="heading">{{resource}}</p>
                         <p class="title">{{value}}</p>
+                        <p class="heading" v-for="(valueGen, resourceGen) in resourceGeneration" v-if="resource == resourceGen">{{valueGen | formatPerSecond}}</p>
                     </div>
                 </div>
             </div>
@@ -66,7 +67,7 @@
             <!-- BOX -->
             <p class="subtitle">Upgrades</p>
             <div class="columns">
-                <div v-for="upgrade in upgrades" class="box column is-3">
+                <div v-for="upgrade in upgrades" v-if="purchasedUpgrades.indexOf(upgrade.title) < 0" class="box column is-3">
                     <article class="media is-light">
                         <div class="media-left">
                             <figure class="image is-64x64">
@@ -79,7 +80,7 @@
                                     <strong>{{upgrade.title}}</strong>
                                     <small>{{upgrade.costList | stringifyMaterials}}</small>
                                     <br>
-                                    <button class="button is-rounded is-primary" v-bind:disabled="!upgrade.canBuy">Buy</button>
+                                    <button class="button is-rounded is-primary" v-on:click="buyUpgrade(upgrade)" v-bind:disabled="!upgrade.canBuy">Buy</button>
                                     <br> {{upgrade.description}}
                                 </p>
                             </div>
@@ -87,11 +88,16 @@
                     </article>
                 </div>
             </div>
+            <div class="section">
+                <ul>
+                    <li v-for="building in buildings">{{building.name}} {{building.unitTrainList}}</li>
+                </ul>
+            </div>
         </div>
+    </div>
         <!-- SCRIPTS -->
         <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
         <script src="scripts/assets.js"></script>
         <script src="scripts/main.js"></script>
 </body>
-
 </html>

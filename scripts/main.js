@@ -23,16 +23,16 @@ const app = new Vue({
             new Unit('gatherer', 0, [new Resource('food', 1), new Resource('wood', 1)], [{
                 type: 'food',
                 amount: 10,
-                buyModifier: 1.1
+                buyModifier: 1.01
             }], [], true, 'gatherer.svg'),
             new Unit('hunther', 0, [new Resource('food', 2)], [{
                 type: 'food',
                 amount: 11,
-                buyModifier: 1.1
+                buyModifier: 1.01
             }, {
                 type: 'wood',
                 amount: 20,
-                buyModifier: 1.1
+                buyModifier: 1.02
             }], [], true, 'branch-arrow.svg'),
             new Unit('warrior', 0, [new Resource('food', 1)], [{
                 type: 'food',
@@ -96,8 +96,21 @@ const app = new Vue({
                 amount: 2
             }], 'Domesticate animals', 'bison.svg', "With help of beasts Hunthers and Gatherers produce more food and wood", true)
         ],
+        buildings: [
+            new Building('barrack', 0, [], [{
+                type: 'food',
+                amount: 1000}, {type: 'wood', 'amount' : 1000}, {type: 'stone', 'amount' : 1000}], [], true, 'gatherer.svg', 'warrior')
+        ],
         canBuyList: [],
-        clickerAvailable: ['food', 'wood', 'stone']
+        clickerAvailable: ['food', 'wood', 'stone'],
+        resourceGeneration: {
+            food: 0,
+            wood: 0,
+            iron: 0,
+            leather: 0,
+            stone: 0,
+        },
+        purchasedUpgrades: []
     },
     methods: {
         addResource(resource) {
@@ -112,6 +125,33 @@ const app = new Vue({
                 this.updateCanBuy()
             } else {
                 console.log("Not enough resources")
+            }
+        },
+        buyUpgrade(upgrade) {
+            //costList if tiene recursos suficientes
+            this.upgradeUnit(upgrade);
+        },
+        upgradeUnit(upgrade){
+            if (upgrade.canBuy) {
+                for (var i = 0; i < upgrade.typeList.length; i++) {
+                    var unit = upgrade.typeList[i];
+                    //iterates through the list of units that will be upgraded
+                    for (var j = 0; j < upgrade.bonusList.length; j++) {
+                        var bonus = upgrade.bonusList[j];
+                        //iterates through the list of bonuses
+                        var unitToUpgrade = this.findObjectByKey(this.units, 'name', unit.name);
+                        var resourceToUpgrade = this.findObjectByKey(unitToUpgrade.resourcesList, 'type', bonus.type);
+                        if (!resourceToUpgrade){
+                            unitToUpgrade.resourcesList.push({'type': bonus.type, 'amount': 1});
+                            // resourceToUpgrade = this.findObjectByKey(unitToUpgrade.resourcesList, 'type', bonus.type);
+                        }
+                        unitToUpgrade.upgradeResource(bonus.type, bonus.amount);
+                    }
+                }
+                for(var i = 0; i < upgrade.costList.length; i++){
+                    this.spendResource(upgrade.costList[i]);
+                }
+                this.purchasedUpgrades.push(upgrade.title);
             }
         },
         makeUnitAvailable(index) {
@@ -146,9 +186,9 @@ const app = new Vue({
             //Verifies if the resoruce needed amount is available in stats 
             return this.stats[resource.type] >= resource.amount;
         },
-        canBuy(unit) {
+        canBuy(asset) {
             //Return true if every resource in the cost list is available
-            return unit.costList.every(this.enoughResourceToBuy);
+            return asset.costList.every(this.enoughResourceToBuy);
         },
         spendResource(resource) {
             //Spends the resource
@@ -161,31 +201,62 @@ const app = new Vue({
                 if (unit.isAvailable && this.canBuy(unit)) {
                     this.canBuyList.push(unit.name);
                     unit.canBuy = true;
-                } else{
+                } else {
                     unit.canBuy = false;
                 }
             }
             for (var i = 0; i < this.upgrades.length; i++) {
-                console.log(`Verifying upgrade ${this.upgrades[i].title}`)
                 var upgrade = this.upgrades[i];
                 if (upgrade.isAvailable && this.canBuy(upgrade)) {
                     this.canBuyList.push(upgrade.title);
                     upgrade.canBuy = true;
-                } else{
+                } else {
                     upgrade.canBuy = false;
                 }
             }
         },
-        resourcesPerHour(){
-            for (var i = 0; i < this.units.length; i++){
+        resourcesPerHour() {
+            for (var i = 0; i < this.units.length; i++) {
                 var unit = this.units[i];
-                for (var j = 0; j < unit.resourcesList.length; j++){
+                for (var j = 0; j < unit.resourcesList.length; j++) {
                     var resource = unit.resourcesList[j];
-                    // console.log(`You have ${unit.quantity} ${unit.name}, this generates ${resource.amount * unit.quantity} ${resource.type} per hour`)
                     this.stats[resource.type] += (resource.amount * unit.quantity);
                     this.updateCanBuy();
                 }
             }
+            this.calculateResourceGeneration();
+        },
+        calculateResourceGeneration() {
+            var resourceDict = {
+                food: 0,
+                wood: 0,
+                iron: 0,
+                leather: 0,
+                stone: 0,
+            }
+            for (var i = 0; i < this.units.length; i++) {
+                var unit = this.units[i];
+                for (var j = 0; j < unit.resourcesList.length; j++) {
+                    var resource = unit.resourcesList[j];
+                    resourceDict[resource.type] += (resource.amount * unit.quantity);
+                }
+            }
+            this.resourceGeneration = resourceDict;
+        },
+        calculatePopulation() {
+            var pop = 0;
+            for (var i = 0; i < this.units.length; i++){
+                pop+=this.units[i].quantity;
+            }
+            this.stats.population = pop;
+        },
+        findObjectByKey(array, key, value) {
+            for (var i = 0; i < array.length; i++) {
+                if (array[i][key] === value) {
+                    return array[i];
+                }
+            }
+            return null;
         }
     },
     filters: {
@@ -206,29 +277,36 @@ const app = new Vue({
         stringifyMaterials: function (materialList) {
             var stringified = "";
             var length = materialList.length;
-            for (var i = 0; i < length; i++){
+            for (var i = 0; i < length; i++) {
                 var name = materialList[i].type;
                 var amount = materialList[i].amount;
                 stringified += `${amount} ${name}`
                 if ((i + 1) < length)
-                    stringified+=", "
+                    stringified += ", "
             }
             return stringified
         },
-        formatNumber(value){
+        formatNumber(value) {
             if (value === 0)
                 return 0;
             return parseFloat(Math.round(value * 100) / 100).toFixed(2);
+        },
+        formatPerSecond(value) {
+            if (value === 0)
+                return "";
+            return `${value}/s`
         }
     },
     beforeMount() {
         var game = setInterval(function () {
             this.addHour();
             this.resourcesPerHour();
+            this.calculatePopulation();
         }.bind(this), 1000)
     },
     mounted() {
         this.updateCanBuy();
+        this.calculateResourceGeneration();
     }
 })
 

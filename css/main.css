@@ -1,12 +1,4 @@
-body {
-    /* background-color: #57A773; */
-}
-
-/* .card {
-    
-  } */
-
-  .box {
+.box {
     height: 170px;
     flex-direction: column;
 }
